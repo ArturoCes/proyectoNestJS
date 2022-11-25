@@ -9,7 +9,8 @@ import {
   Param,
   Query,
 } from '@nestjs/common';
-import { Card } from './card.model';
+import { Card } from './card.entity';
+
 import { CardsService } from './cards.service';
 
 @Controller('cards')
@@ -20,14 +21,14 @@ export class CardsController {
     if (name) {
       return this.cardsService.getCardsByName(name);
     }
-    return this.cardsService.getAllCards();
+    return this.cardsService.findAll();
   }
   @Get(':id')
   getCardById(@Param('id') id: string) {
     return this.cardsService.getCardById(id);
   }
   @Post()
-  createCard(@Body() card: Card) {
+  createCard(@Body() card: any) {
     return this.cardsService.createCard(card);
   }
   @Put(':id')

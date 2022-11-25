@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Card } from './card.model';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Card } from './card.entity';
 
 @Injectable()
 export class CardsService {
-  getAllCards() {
-    return 'Este método retorna todos  los productos';
+  constructor(@InjectRepository(Card) private cardRepo: Repository<Card>) {}
+
+  findAll() {
+    return this.cardRepo.find();
   }
 
   getCardsByName(name: string) {
@@ -18,9 +22,12 @@ export class CardsService {
     return `Este método retorna la carta con id: ${id}`;
   }
 
-  createCard(card: Card) {
-    console.log(card);
-    return 'Este método crea una nueva carta';
+  createCard(card: any) {
+    const newCard = new Card();
+    newCard.name = card.name;
+    newCard.amount = card.amount;
+
+    return this.cardRepo.save(newCard);
   }
 
   replaceCard(id: string, card: Card) {
